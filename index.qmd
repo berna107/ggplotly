@@ -1,0 +1,134 @@
+---
+title: "Graficación en ggplot 2 y quarto"
+format: 
+  html:
+    toc: true
+    lang: es
+---
+
+# introducción
+
+este documento presenta un cojunto de visualizaciones de datos elaborados con paquetes del lenguaje R
+
+# carga de bibliotecas
+
+```{r}
+#| code-fold: true
+#| label: carga-biblioteca
+#| warning: false
+#| message: false
+library(tidyverse)
+library(plotly)
+library(DT)
+library(gapminder)
+```
+
+# carga de datos
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: carga de datos
+mpg |>
+  datatable(
+    options = list(
+      pageLength = 5
+    )
+  )
+```
+
+# diamnantes
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: carga de datos diamante
+diamonds |>
+  datatable(
+    options = list(
+      pageLength = 5
+    )
+  )
+```
+
+# Tabla de datos de gapminder
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: carga-de-datos-paises
+
+gapminder |>
+  filter(year == 2007) |> # filtro para el año 2007
+  datatable(
+    options = list(
+      pageLength = 5,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
+
+# Tabla de datos de covid
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: carga-de-datos-covid
+
+covid_general <-
+  read_delim(
+    file = "https://raw.githubusercontent.com/gf0604-procesamientodatosgeograficos/2023-i/main/datos/ministerio-salud/covid/05_30_22_CSV_GENERAL.csv",
+    col_select = c(
+      "FECHA",
+      "positivos",
+      "activos",
+      "RECUPERADOS",
+      "fallecidos",
+      "nue_posi",
+      "nue_falleci",
+      "salon",
+      "UCI"
+    )
+  )
+
+# Cambio de nombre de columnas
+covid_general <-
+  covid_general |>
+  rename(
+    fecha = FECHA,
+    recuperados = RECUPERADOS,
+    nuevos_positivos = nue_posi,
+    nuevos_fallecidos = nue_falleci,
+    uci = UCI
+  )
+
+# Cambio de tipo de datos de la columna fecha, de str a date
+covid_general <-
+  covid_general |>
+  mutate(fecha = as.Date(fecha, format = "%d/%m/%Y"))
+
+# Tabla de datos de COVID generales
+covid_general |>
+  datatable(
+    options = list(
+      pageLength = 10,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
+
+# Tabla de datos de covid general
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: carga-de-datos-covidgen
+# Tabla de datos de COVID generales
+covid_general |>
+  datatable(
+    options = list(
+      pageLength = 5,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
